@@ -2,7 +2,6 @@
   <q-page class="flex column items-center">
     <p class="q-pa-md text-subtitle2 text-center text-weight-light" v-html="text" />
     <q-btn color="secondary" label="M'authentifier" @click="signButton" />
-    <q-space />
   </q-page>
 </template>
 
