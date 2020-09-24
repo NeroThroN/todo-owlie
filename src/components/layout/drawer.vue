@@ -1,11 +1,16 @@
 <template>
     <q-drawer v-model="drawerOpen">
-      Drawer Content
+      <SignIN />
     </q-drawer>
 </template>
 
 <script>
+import SignIN from 'components/sign/sign_in'
+
 export default {
+  components: {
+    SignIN
+  },
   data: () => ({
     drawerOpen: false
   }),
