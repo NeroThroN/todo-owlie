@@ -1,25 +1,31 @@
 import * as firebase from 'firebase/app'
 require('firebase/auth')
+require('firebase/firestore')
 
 export default {
   namespaced: true,
 
   state: () => ({
-    userEmail: null
+    uid: null,
+    email: null
   }),
 
   getters: {
     isConnected (state) {
-      return state.userEmail !== null
+      return state.uid !== null
     },
-    getUserEmail (state) {
-      return state.userEmail
+    getEmail (state) {
+      return state.email
+    },
+    getUid (state) {
+      return state.uid
     }
   },
 
   mutations: {
-    setUserEmail (state, newEmail) {
-      state.userEmail = newEmail
+    setUser (state, { uid, email }) {
+      state.uid = uid
+      state.email = email
     }
   },
 
@@ -27,7 +33,12 @@ export default {
     // Create an user with Firebase (Email & Password)
     signUp (_, { email, password }) {
       return new Promise((resolve, reject) => {
-        firebase.auth().createUserWithEmailAndPassword(email, password).then((_) => {
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(async (firebaseAuthResult) => {
+          // Create a document with userUID for the id in firestore
+          const userDoc = firebase.firestore().collection('users').doc(firebaseAuthResult.user.uid)
+          // Populate the document with user's email and list of toDo
+          const timeStamp = firebase.firestore.Timestamp.now()
+          await userDoc.set({ email: email, createdAt: timeStamp })
           resolve(_)
         }).catch((error) => {
           reject(error)
