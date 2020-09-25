@@ -1,5 +1,5 @@
 <template>
-  <q-expansion-item :group="group" itemscope header-class="todo-header">
+  <q-expansion-item :group="group" itemscope header-class="todo-header" :class="{'todo-done':  done}">
     <template v-slot:header>
       <q-item-section>
         <q-item-label class="q-mx-md text-grey-9">{{ todo.title }}</q-item-label>
@@ -11,7 +11,7 @@
 
     <q-card>
       <q-card-section>
-        <div v-if="haveContent">{{ todo.description }}</div>
+        <div v-if="haveContent" class="todo-content">{{ todo.description }}</div>
         <div v-else class="text-italic text-grey">Aucune description</div>
 
         <q-popup-edit ref="editPopUp" v-model="todo.description" title="Changer la description" @show="fixEditPopUp" @save="updateDescription" auto-save buttons label-cancel="retour" label-set="Sauvegarder">
@@ -94,6 +94,15 @@ export default {
       span {
         color: white;
       }
+    }
+  }
+  .todo-done {
+    .q-item__label {
+      text-decoration: line-through;
+      color: rgba(128, 128, 128, 0.747) !important;
+    }
+    .todo-content {
+      color: rgba(128, 128, 128, 0.623) !important;
     }
   }
 </style>

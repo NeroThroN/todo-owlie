@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { Notify } from 'quasar'
+
 export default {
   data: () => ({
     email: '',
@@ -41,19 +43,46 @@ export default {
       this.$store.dispatch('user/signIn', data).then(() => {
         this.resetEmailAndPassword()
       }).catch((error) => {
+        Notify.create({
+          position: 'top',
+          icon: 'warning',
+          color: 'negative',
+          message: error.message,
+          actions: [
+            { icon: 'close', color: 'white' }
+          ]
+        })
         console.log('error', error)
       }).finally(() => {
         this.loading = false
       })
     },
 
-    // Call the action in the store (user) to sign up with Google
+    // Call the action in the store (user) to sign up with Firebase (email and password)
     signUpWithEmailAndPassword () {
       this.loading = true
       const data = { email: this.email, password: this.password }
       this.$store.dispatch('user/signUp', data).then(() => {
+        Notify.create({
+          position: 'top',
+          icon: 'thumb_up_alt',
+          color: 'positive',
+          message: 'Bravo, vous avez créer votre compte !',
+          actions: [
+            { icon: 'close', color: 'white' }
+          ]
+        })
         this.resetEmailAndPassword()
       }).catch((error) => {
+        Notify.create({
+          position: 'top',
+          icon: 'warning',
+          color: 'negative',
+          message: error.message,
+          actions: [
+            { icon: 'close', color: 'white' }
+          ]
+        })
         console.log('error', error)
       }).finally(() => {
         this.loading = false
