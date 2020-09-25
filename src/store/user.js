@@ -87,6 +87,28 @@ export default {
       })
     },
 
+    // Update the todo's done state
+    updateToDoDoneByID ({ state }, { id, done }) {
+      return new Promise((resolve, reject) => {
+        firebase.firestore().collection('users').doc(state.uid).collection('toDoList').doc(id).update({ done }).then((_) => {
+          resolve(_)
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    },
+
+    // Update the todo's description
+    updateToDoDescriptionByID ({ state }, { id, description }) {
+      return new Promise((resolve, reject) => {
+        firebase.firestore().collection('users').doc(state.uid).collection('toDoList').doc(id).update({ description }).then((_) => {
+          resolve(_)
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    },
+
     // get the firebase document of this user
     getUserDocumentPath ({ state }) {
       return firebase.firestore().collection('users').doc(state.uid).path
