@@ -8,7 +8,7 @@
         <q-btn flat round icon="share" color="grey-5" />
         <q-btn flat round icon="search" color="grey-5" />
       </q-toolbar>
-      <div class="q-mt-md q-px-xl q-pb-sm">
+      <div class="q-mt-md q-px-xl q-ml-md q-pb-sm">
         <q-toolbar-title>
           Owlie Todolist
         </q-toolbar-title>
