@@ -11,11 +11,11 @@
 
     <q-card>
       <q-card-section>
-        <div v-if="haveContent">{{ todo.content }}</div>
+        <div v-if="haveContent">{{ todo.description }}</div>
         <div v-else class="text-italic text-grey">Aucune description</div>
 
-        <q-popup-edit ref="editPopUp" v-model="todo.content" title="Changer la description" @show="fixEditPopUp">
-          <q-input ref="editInput" v-model="todo.content" type="textarea" autofocus autogrow />
+        <q-popup-edit ref="editPopUp" v-model="todo.description" title="Changer la description" @show="fixEditPopUp">
+          <q-input ref="editInput" v-model="todo.description" type="textarea" autofocus autogrow />
         </q-popup-edit>
       </q-card-section>
     </q-card>
@@ -33,7 +33,7 @@ export default {
   }),
   computed: {
     haveContent () {
-      return this.todo.content !== null && this.todo.content !== ''
+      return this.todo.description !== null && this.todo.description !== ''
     }
   },
   methods: {

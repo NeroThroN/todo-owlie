@@ -2,7 +2,7 @@
   <div>
     <q-list v-if="todos.length" class="q-ml-xl q-pt-lg" separator>
       <!-- Slidable item on the left (to delete) -->
-      <q-slide-item v-for="(todo, indexToDo) in todos" :key="'todo-' + indexToDo" @left="deleteItem(indexToDo)" left-color="red">
+      <q-slide-item v-for="todo in todos" :key="'todo-' + todo.id" :ref="'todo-' + todo.id" @left="deleteItem(todo.id)" left-color="red">
         <template v-slot:left>
           <div class="row items-center">
             <q-icon left name="delete" /> Supprimer
@@ -19,31 +19,40 @@
 
 <script>
 import ToDoItem from 'components/to_do/todo_item'
+import { firestore } from 'firebase'
 
 export default {
   components: { ToDoItem },
   data: () => ({
-    todos: [
-      {
-        done: true,
-        title: 'Développeer système d\'auth',
-        content: ''
-      },
-      {
-        done: false,
-        title: 'Tester système d\'auth',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        done: false,
-        title: 'Mettre à jour les dépendances',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      }
-    ]
+    todos: []
   }),
+  mounted () {
+    this.$store.dispatch('user/getUserDocumentPath').then((userPath) => {
+      firestore().doc(userPath).collection('toDoList').onSnapshot((snapshot) => {
+        this.todos = []
+        snapshot.forEach((document) => {
+          const docData = document.data()
+          this.todos.push({
+            id: document.id,
+            done: docData.done,
+            title: docData.title,
+            description: docData.description
+          })
+        })
+      })
+    }).catch((error) => {
+      console.log(error)
+    })
+  },
   methods: {
-    deleteItem (index) {
-      alert('Supprimer l\'élément : ' + index)
+    deleteItem (id) {
+      this.$store.dispatch('user/removeToDoByID', id).catch((error) => {
+        const refs = this.$refs['todo-' + id]
+        if (refs.length) {
+          refs[0].reset()
+        }
+        console.log(error)
+      })
     }
   }
 }

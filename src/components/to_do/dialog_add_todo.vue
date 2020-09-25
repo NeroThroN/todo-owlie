@@ -9,7 +9,7 @@
 
         <q-card-section>
           <q-input v-model="title" :rules="[notEmptyRule]" filled label="Titre *"  />
-          <q-input v-model="content" filled type="textarea" label="Description" />
+          <q-input v-model="description" filled type="textarea" label="Description" />
         </q-card-section>
 
         <q-separator />
@@ -27,7 +27,7 @@ export default {
   data: () => ({
     openDialog: false,
     title: '',
-    content: '',
+    description: '',
     loading: false
   }),
   computed: {
@@ -45,12 +45,19 @@ export default {
   methods: {
     resetDialog () {
       this.title = ''
-      this.content = ''
+      this.description = ''
     },
     submit () {
-      alert('Ajouter l\'élément ' + this.title)
-      this.openDialog = false
-      this.resetDialog()
+      this.loading = true
+      const data = { title: this.title, description: this.description }
+      this.$store.dispatch('user/addToDo', data).then(() => {
+        this.openDialog = false
+        this.resetDialog()
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        this.loading = false
+      })
     }
   }
 }
