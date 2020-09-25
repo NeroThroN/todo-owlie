@@ -74,6 +74,15 @@ export default {
         })
         this.resetEmailAndPassword()
       }).catch((error) => {
+        Notify.create({
+          position: 'top',
+          icon: 'warning',
+          color: 'negative',
+          message: error.message,
+          actions: [
+            { icon: 'close', color: 'white' }
+          ]
+        })
         console.log('error', error)
       }).finally(() => {
         this.loading = false
