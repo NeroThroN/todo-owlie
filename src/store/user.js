@@ -38,7 +38,7 @@ export default {
           const userDoc = firebase.firestore().collection('users').doc(firebaseAuthResult.user.uid)
           // Populate the document with user's email and list of toDo
           const timeStamp = firebase.firestore.Timestamp.now()
-          await userDoc.set({ email: email, createdAt: timeStamp })
+          await userDoc.set({ email, createdAt: timeStamp })
           resolve(_)
         }).catch((error) => {
           reject(error)
@@ -62,6 +62,56 @@ export default {
       return new Promise((resolve, reject) => {
         firebase.auth().signOut().then(() => resolve()).catch((error) => reject(error))
       })
+    },
+
+    // Add a new todo element
+    addToDo ({ state, dispatch }, { title, description }) {
+      return new Promise((resolve, reject) => {
+        const timeStamp = firebase.firestore.Timestamp.now()
+        firebase.firestore().collection('users').doc(state.uid).collection('toDoList').add({ title, description, done: false, createdAt: timeStamp }).then((_) => {
+          resolve(_)
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    },
+
+    // Remove a todo element by id
+    removeToDoByID ({ state }, id) {
+      return new Promise((resolve, reject) => {
+        firebase.firestore().collection('users').doc(state.uid).collection('toDoList').doc(id).delete().then((_) => {
+          resolve(_)
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    },
+
+    // Update the todo's done state
+    updateToDoDoneByID ({ state }, { id, done }) {
+      return new Promise((resolve, reject) => {
+        firebase.firestore().collection('users').doc(state.uid).collection('toDoList').doc(id).update({ done }).then((_) => {
+          resolve(_)
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    },
+
+    // Update the todo's description
+    updateToDoDescriptionByID ({ state }, { id, description }) {
+      return new Promise((resolve, reject) => {
+        firebase.firestore().collection('users').doc(state.uid).collection('toDoList').doc(id).update({ description }).then((_) => {
+          resolve(_)
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    },
+
+    // get the firebase document of this user
+    getUserDocumentPath ({ state }) {
+      return firebase.firestore().collection('users').doc(state.uid).path
     }
   }
 }
