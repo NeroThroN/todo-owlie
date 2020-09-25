@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import ToDoList from 'components/to_do/todo_lis'
+import ToDoList from 'components/to_do/todo_list'
 import ToDoAddDialog from 'components/to_do/dialog_add_todo'
 
 export default {
