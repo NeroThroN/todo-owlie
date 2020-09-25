@@ -9,9 +9,7 @@
 export default {
   methods: {
     signOut () {
-      this.$store.dispatch('user/signOut').then(() => {
-        this.$root.$router.replace('/')
-      }).catch((error) => {
+      this.$store.dispatch('user/signOut').catch((error) => {
         console.log(error)
       })
     }

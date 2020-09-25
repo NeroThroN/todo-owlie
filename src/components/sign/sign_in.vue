@@ -39,7 +39,7 @@ export default {
       this.loading = true
       const data = { email: this.email, password: this.password }
       this.$store.dispatch('user/signIn', data).then(() => {
-        this.$root.$router.replace('/ToDo')
+        this.resetEmailAndPassword()
       }).catch((error) => {
         console.log('error', error)
       }).finally(() => {
@@ -52,12 +52,18 @@ export default {
       this.loading = true
       const data = { email: this.email, password: this.password }
       this.$store.dispatch('user/signUp', data).then(() => {
-        this.$root.$router.replace('/ToDo')
+        this.resetEmailAndPassword()
       }).catch((error) => {
         console.log('error', error)
       }).finally(() => {
         this.loading = false
       })
+    },
+
+    // Reset email and password
+    resetEmailAndPassword () {
+      this.email = ''
+      this.password = ''
     }
   }
 }
